@@ -80,8 +80,8 @@ Please note that right now it is not enough to create a new config in the api.js
 This might be changed in a future release so that you can add new apis only by adjusting the config file.
 
 Currently the following endpoints (in brackets the corresponding mindee apis) are provided:
-`http://mayam-mindee-web:8000/general/<document_id>` (https://platform.mindee.com/mindee/proof_of_address)
-`http://mayam-mindee-web:8000/invoice/<document_id>` (https://platform.mindee.com/mindee/invoices)
+- `http://mayam-mindee-web:8000/general/<document_id>` (https://platform.mindee.com/mindee/proof_of_address)
+- `http://mayam-mindee-web:8000/invoice/<document_id>` (https://platform.mindee.com/mindee/invoices)
 
 The payroll endpoint is an example for a custom api and cannot be directly used by you. Instead, create and train your own api over at mindee and use this endpoint as a blueprint for your implementation.
 
