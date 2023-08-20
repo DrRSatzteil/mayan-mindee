@@ -85,7 +85,7 @@ Currently the following endpoints (in brackets the corresponding mindee apis) ar
 
 The payroll endpoint is an example for a custom api and cannot be directly used by you. Instead, create and train your own api over at mindee and use this endpoint as a blueprint for your implementation.
 
-### 2. mayan-comdirect-worker
+### 2. mayan-mindee-worker
 
 This service receives tasks queued by the web service.
 
