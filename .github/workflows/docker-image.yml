@@ -1,0 +1,54 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  schedule:
+    - cron: '15 1 1 * *'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Docker login
+      env:
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_PASS: ${{secrets.DOCKER_PASS}}
+      run:
+        docker login -u $DOCKER_USER -p $DOCKER_PASS 
+    
+    - name: Build the web Docker image
+      run: docker build . --file docker/web/Dockerfile --tag ${{secrets.DOCKER_USER}}/mayan-mindee-web:latest
+    - name: Push web
+      run: docker push ${{secrets.DOCKER_USER}}/mayan-mindee-web
+    - name: push web README to Dockerhub
+      uses: christian-korneck/update-container-description-action@v1
+      env:
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_PASS: ${{secrets.DOCKER_PASS}}
+      with:
+        destination_container_repo: ${{secrets.DOCKER_USER}}/mayan-mindee-web
+        provider: dockerhub
+        short_description: 'Weserver for Mayan EDMS Mindee add-on'
+        readme_file: 'README.md'
+    
+    - name: Build the worker Docker image
+      run: docker build . --file docker/worker/Dockerfile --tag ${{secrets.DOCKER_USER}}/mayan-mindee-worker:latest
+    - name: Push worker
+      run: docker push ${{secrets.DOCKER_USER}}/mayan-mindee-worker
+    - name: push worker README to Dockerhub
+      uses: christian-korneck/update-container-description-action@v1
+      env:
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_PASS: ${{secrets.DOCKER_PASS}}
+      with:
+        destination_container_repo: ${{secrets.DOCKER_USER}}/mayan-mindee-worker
+        provider: dockerhub
+        short_description: 'Worker for Mayan EDMS Mindee add-on'
+        readme_file: 'README.md'
+
+

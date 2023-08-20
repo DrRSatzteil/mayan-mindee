@@ -1,0 +1,176 @@
+{
+    "custom": [
+        {
+            "documenttype": "Payroll",
+            "account": "XXXXXXX",
+            "endpoint": "payroll",
+            "pagelimit": 3,
+            "metadata": {
+                "receiptdate": {
+                    "fieldname": "date",
+                    "overwrite": false
+                },
+                "issuer": {
+                    "fieldname": "supplier_name",
+                    "overwrite": false
+                },
+                "earningperiod":{
+                    "fieldname": "period",
+                    "overwrite": false
+                },
+                "earningnet": {
+                    "fieldname": "net_salary",
+                    "overwrite": false,
+                    "postprocess": [
+                        {
+                            "action": "replace",
+                            "args": [",", ""]
+                        },
+                        {
+                            "action": "replace",
+                            "args": [".", ","]
+                        },
+                        {
+                            "action": "append",
+                            "args": ["€"]
+                        }
+                    ]
+                },
+                "earninggross": {
+                    "fieldname": "gross_salary",
+                    "overwrite": false,
+                    "postprocess": [
+                        {
+                            "action": "replace",
+                            "args": [",", ""]
+                        },
+                        {
+                            "action": "replace",
+                            "args": [".", ","]
+                        },
+                        {
+                            "action": "append",
+                            "args": ["€"]
+                        }
+                    ]
+                }
+            },
+            "tags": {
+                "Mike": {
+                    "fieldname": "receiver",
+                    "match": "mike teavee",
+                    "confidence": 85
+                },
+                "Veruca": {
+                    "fieldname": "receiver",
+                    "match": "veruca salt",
+                    "confidence": 85
+                }
+            }
+        }
+    ],
+    "standard": [
+        {
+            "documenttype": "TypeInvoiceV4",
+            "pagelimit": 3,
+            "metadata": {
+                "receiptdate": {
+                    "fieldname": "invoice_date.value",
+                    "overwrite": false
+                },
+                "issuer": {
+                    "fieldname": "supplier_name.value",
+                    "overwrite": false
+                },
+                "invoicenumber": {
+                    "fieldname": "invoice_number.value",
+                    "overwrite": false
+                },
+                "invoiceamount": {
+                    "fieldname": "total_amount.value",
+                    "overwrite": false,
+                    "postprocess": [
+                        {
+                            "action": "format",
+                            "args": ["{:.2f}"]
+                        },
+                        {
+                            "action": "replace",
+                            "args": [",", ""]
+                        },
+                        {
+                            "action": "replace",
+                            "args": [".", ","]
+                        },
+                        {
+                            "action": "append",
+                            "args": ["€"]
+                        }
+                    ]
+                },
+                "iban": {
+                    "fieldname": "supplier_payment_details[0].iban",
+                    "overwrite": false
+                },
+                "bic": {
+                    "fieldname": "supplier_payment_details[0].swift",
+                    "overwrite": false,
+                    "postprocess": [
+                        {
+                            "action": "schwifty",
+                            "args": []
+                        }
+                    ]
+                }
+            },
+            "tags": {
+                "Augustus": {
+                    "fieldname": "customer_name",
+                    "match": "augustus gloop",
+                    "confidence": 85
+                },
+                "Violet": {
+                    "fieldname": "customer_name",
+                    "match": "violet beauregarde",
+                    "confidence": 85
+                },
+                "Rechnung": {
+                    "fieldname": "customer_name",
+                    "match": "",
+                    "confidence": 0
+                }
+            }
+        },
+        {
+            "documenttype": "TypeProofOfAddressV1",
+            "pagelimit": 3,
+            "metadata": {
+                "receiptdate": {
+                    "fieldname": "date.value",
+                    "overwrite": false
+                },
+                "issuer": {
+                    "fieldname": "issuer_name.value",
+                    "overwrite": false
+                }
+            },
+            "tags": {
+                "Joe": {
+                    "fieldname": "recipient_name.value",
+                    "match": "granpa joe",
+                    "confidence": 85
+                },
+                "Josephine": {
+                    "fieldname": "recipient_name.value",
+                    "match": "grandma josephine",
+                    "confidence": 85
+                },
+                "General": {
+                    "fieldname": "recipient_name.value",
+                    "match": "",
+                    "confidence": 0
+                }
+            }
+        }
+    ]
+}

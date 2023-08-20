@@ -1,0 +1,20 @@
+name: Docker Image CI Pull
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build the web Docker image
+      run: docker build . --file docker/web/Dockerfile --tag ${{secrets.DOCKER_USER}}/mayan-mindee-web:latest
+    
+    - name: Build the worker Docker image
+      run: docker build . --file docker/worker/Dockerfile --tag ${{secrets.DOCKER_USER}}/mayan-mindee-worker:latest
