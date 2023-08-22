@@ -8,11 +8,14 @@ from collections import defaultdict
 from logging.config import fileConfig
 from typing import Any
 
+import magic
 import postprocess
 from mayanapi import Mayan
 from mindeeapi import ocr_custom, ocr_standard
 from PyPDF2 import PdfReader, PdfWriter
 from thefuzz import fuzz
+
+SUPPORTED_MIMETYPES = ["application/pdf"]
 
 __all__ = ["process_custom", "process_standard"]
 
@@ -38,7 +41,7 @@ def get_mayan() -> Mayan:
     return m
 
 
-def load_document_metadata(m: Mayan, document: dict):
+def load_document_metadata(m: Mayan, document: dict) -> dict:
     document_metadata = {
         x["metadata_type"]["name"]: x
         for x in m.all(m.ep("metadata", base=document["url"]))
@@ -46,11 +49,10 @@ def load_document_metadata(m: Mayan, document: dict):
     return document_metadata
 
 
-def load_document(m: Mayan, document_id):
+def load_document(m: Mayan, document_id) -> (dict, bytes):
     _logger.info("Loading document %s", document_id)
 
     # Check if document exists
-    # TODO check MIMETYPE
     document, status = m.get(m.ep(f"documents/{str(document_id)}"))
     if not isinstance(document, dict) or status != 200:
         _logger.error("Could not retrieve document")
@@ -59,12 +61,23 @@ def load_document(m: Mayan, document_id):
     # Load document pdf
     pdf_bytes = m.downloadfile(document["file_latest"]["download_url"])
 
+    mime = magic.Magic(mime=True)
+    mimetype = mime.from_buffer(io.BytesIO(pdf_bytes).read(2048))
+    if mimetype not in SUPPORTED_MIMETYPES:
+        raise Exception(
+            "Mimetype "
+            + mimetype
+            + " is not supported. Supported mimetypes: "
+            + ", ".join(SUPPORTED_MIMETYPES)
+            + "."
+        )
+
     return document, pdf_bytes
 
 
 def add_metadata(
     m: Mayan, document: dict, metadata_name: str, metadata_value: str, overwrite: bool
-):
+) -> None:
     for meta in m.document_types[document["document_type"]["label"]]["metadatas"]:
         meta_name = meta["metadata_type"]["name"]
         if meta_name == metadata_name:
@@ -94,7 +107,7 @@ def add_metadata(
             break
 
 
-def add_tags(m: Mayan, document: dict, tags):
+def add_tags(m: Mayan, document: dict, tags) -> None:
     tags.append("MAM")
     for t in tags:
         if t not in m.tags:
@@ -111,11 +124,11 @@ def add_tags(m: Mayan, document: dict, tags):
             result = m.post(m.ep("tags/attach", base=document["url"]), json_data=data)
 
 
-def is_similar(seq1, seq2, confidence):
+def is_similar(seq1, seq2, confidence) -> bool:
     return fuzz.partial_ratio(seq1.lower(), seq2.lower()) >= confidence
 
 
-def getattritem(obj, attr: str):
+def getattritem(obj, attr: str) -> Any:
     steps = list(filter(None, re.split(r"\[(\d+)\]", attr)))
     a = iter(steps)
     pairs = zip(a, a)
@@ -128,13 +141,13 @@ def getattritem(obj, attr: str):
     return obj
 
 
-def post_processing(result: Any, parsed_doc, processing_steps: list):
+def post_processing(result: Any, parsed_doc, processing_steps: list) -> str:
     for step in processing_steps:
         result = getattr(postprocess, step["action"])(result, parsed_doc, *step["args"])
     return result
 
 
-def cut_pages(pdf_bytes, pagelimit):
+def cut_pages(pdf_bytes, pagelimit) -> bytes:
     infile = PdfReader(io.BytesIO(pdf_bytes))
     output = PdfWriter()
     if pagelimit < len(infile.pages):
@@ -149,7 +162,7 @@ def cut_pages(pdf_bytes, pagelimit):
         return pdf_bytes
 
 
-def process_standard(document_id, document_type: str):
+def load_config(document_type) -> dict:
     with open("/app/mayanmindee/config/api.json", "r") as f:
         config = json.load(f)
 
@@ -157,9 +170,14 @@ def process_standard(document_id, document_type: str):
     if document_type not in apis:
         raise Exception("No config found for document type " + document_type)
 
+    return apis
+
+
+def process_standard(document_id, document_type: str) -> None:
+    apis = load_config(document_type)
+
     m = get_mayan()
     document, pdf_bytes = load_document(m, document_id)
-
     file = cut_pages(pdf_bytes, pagelimit=apis[document_type]["pagelimit"])
 
     parsed_doc = ocr_standard(file, str(document_id) + ".pdf", document_type)
@@ -210,14 +228,8 @@ def process_standard(document_id, document_type: str):
     add_tags(m, document, tags)
 
 
-def process_custom(document_id, document_type: str):
-    # TODO: This is ok for the docker container but actually should not be an absolute path...
-    with open("/app/mayanmindee/config/api.json", "r") as f:
-        config = json.load(f)
-
-    apis = {api["documenttype"]: api for api in config["custom"]}
-    if document_type not in apis:
-        raise Exception("No config found for document type " + document_type)
+def process_custom(document_id, document_type: str) -> None:
+    apis = load_config(document_type)
 
     account_name = apis[document_type]["account"]
     endpoint_name = apis[document_type]["endpoint"]

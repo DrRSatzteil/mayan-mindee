@@ -65,7 +65,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
 ```
 
-Note that the volume mount of /app/mayanmindee/config/api.json is required as the config that is provided in this repository is only an example and needs to fine tuning for your installation.
+Note that the volume mount of /app/mayanmindee/config/api.json is required as the config that is provided in this repository is only an example and needs to be fine tuned for your installation.
 
 Mayan Mindee consists of two services:
 

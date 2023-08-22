@@ -25,6 +25,7 @@ setup(
         "schwifty",
         "thefuzz",
         "python-Levenshtein",
-        "PyPDF2"
+        "PyPDF2",
+        "python-magic"
     ],
 )
