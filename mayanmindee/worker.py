@@ -8,7 +8,6 @@ from collections import defaultdict
 from logging.config import fileConfig
 from typing import Any
 
-import magic
 import postprocess
 from mayanapi import Mayan
 from mindeeapi import ocr_custom, ocr_standard
@@ -58,11 +57,7 @@ def load_document(m: Mayan, document_id) -> (dict, bytes):
         _logger.error("Could not retrieve document")
         return None
 
-    # Load document pdf
-    pdf_bytes = m.downloadfile(document["file_latest"]["download_url"])
-
-    mime = magic.Magic(mime=True)
-    mimetype = mime.from_buffer(io.BytesIO(pdf_bytes).read(2048))
+    mimetype = document["file_latest"]["mimetype"]
     if mimetype not in SUPPORTED_MIMETYPES:
         raise Exception(
             "Mimetype "
@@ -71,6 +66,9 @@ def load_document(m: Mayan, document_id) -> (dict, bytes):
             + ", ".join(SUPPORTED_MIMETYPES)
             + "."
         )
+
+    # Load document pdf
+    pdf_bytes = m.downloadfile(document["file_latest"]["download_url"])
 
     return document, pdf_bytes
 
