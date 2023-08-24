@@ -113,6 +113,7 @@ See full example of config file in mayanmindee/config/api.json.
             "account": <String: Mindee account, see documentation over at mindee>,
             "endpoint": <String: Name of the endpoint as defined over at mindee>,
             "pagelimit": <Integer: Limits the number of pages sent to mindee (see api limits and it may be used to save you cost). All pages exeeding the limit will be removed before the documents gets sent>,
+            "storeocr": <String: Optional name of metadata item to store the complete prediction data including boxes etc.>,
             "metadata": {
                 <String: Label of your 1st metadata type in mayan>: {
                     "fieldname": <String: Name of the field in the mindee api, equals the name of the field in the api. For standard apis (see below) this gets a bit more complicated, please see api documentation at mindee or debug an api response to see the exact fields>,
@@ -150,6 +151,7 @@ See full example of config file in mayanmindee/config/api.json.
         {
             "documenttype": "TypeInvoiceV4",
             "pagelimit": 10,
+            "storeocr": "mindee",
             "metadata": {
                 "receiptdate": {
                     "fieldname": "invoice_date.value",
