@@ -16,15 +16,15 @@ app = Flask("MAYANMINDEE")
 
 @app.route("/general/<int:document_id>", methods=["GET", "POST"])
 def trigger_general(document_id):
-    q.enqueue(process_standard, str(document_id), "TypeProofOfAddressV1")
+    q.enqueue(process_standard, document_id, "TypeProofOfAddressV1")
     return "OK"
 
 @app.route("/invoice/<int:document_id>", methods=["GET", "POST"])
 def trigger_invoice(document_id):
-    q.enqueue(process_standard, str(document_id), "TypeInvoiceV4")
+    q.enqueue(process_standard, document_id, "TypeInvoiceV4")
     return "OK"
 
 @app.route("/payroll/<int:document_id>", methods=["GET", "POST"])
 def trigger_payroll(document_id):
-    q.enqueue(process_custom, str(document_id), "Payroll")
+    q.enqueue(process_custom, document_id, "Payroll")
     return "OK"

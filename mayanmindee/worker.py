@@ -171,7 +171,7 @@ def load_config(document_type) -> dict:
     return apis
 
 
-def process_standard(document_id, document_type: str) -> None:
+def process_standard(document_id: int, document_type: str) -> None:
     apis = load_config(document_type)
 
     m = get_mayan()
@@ -179,6 +179,20 @@ def process_standard(document_id, document_type: str) -> None:
     file = cut_pages(pdf_bytes, pagelimit=apis[document_type]["pagelimit"])
 
     parsed_doc = ocr_standard(file, str(document_id) + ".pdf", document_type)
+
+    if "storeocr" in apis[document_type]:
+        storeocr = apis[document_type]["storeocr"]
+        if storeocr:
+            prediction = json.dumps(
+                parsed_doc.http_response["document"]["inference"]["prediction"]
+            )
+            add_metadata(
+                m,
+                document,
+                storeocr,
+                prediction,
+                True,
+            )
 
     required_fields = defaultdict(list)
     for metadata, mapping in apis[document_type]["metadata"].items():
@@ -226,7 +240,7 @@ def process_standard(document_id, document_type: str) -> None:
     add_tags(m, document, tags)
 
 
-def process_custom(document_id, document_type: str) -> None:
+def process_custom(document_id: int, document_type: str) -> None:
     apis = load_config(document_type)
 
     account_name = apis[document_type]["account"]
@@ -240,6 +254,20 @@ def process_custom(document_id, document_type: str) -> None:
     parsed_doc = ocr_custom(
         file, str(document_id) + ".pdf", account_name, endpoint_name
     )
+
+    if "storeocr" in apis[document_type]:
+        storeocr = apis[document_type]["storeocr"]
+        if storeocr:
+            prediction = json.dumps(
+                parsed_doc.http_response["document"]["inference"]["prediction"]
+            )
+            add_metadata(
+                m,
+                document,
+                storeocr,
+                prediction,
+                True,
+            )
 
     required_fields = defaultdict(list)
     for metadata, mapping in apis[document_type]["metadata"].items():

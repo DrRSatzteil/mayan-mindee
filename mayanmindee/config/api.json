@@ -5,6 +5,7 @@
             "account": "XXXXXXX",
             "endpoint": "payroll",
             "pagelimit": 3,
+            "storeocr": "mindee",
             "metadata": {
                 "receiptdate": {
                     "fieldname": "date",
@@ -73,6 +74,7 @@
         {
             "documenttype": "TypeInvoiceV4",
             "pagelimit": 3,
+            "storeocr": "mindee",
             "metadata": {
                 "receiptdate": {
                     "fieldname": "invoice_date.value",
