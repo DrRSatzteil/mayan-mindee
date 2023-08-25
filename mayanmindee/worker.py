@@ -160,11 +160,11 @@ def cut_pages(pdf_bytes, pagelimit) -> bytes:
         return pdf_bytes
 
 
-def load_config(document_type) -> dict:
+def load_config(document_type, config_type) -> dict:
     with open("/app/mayanmindee/config/api.json", "r") as f:
         config = json.load(f)
 
-    apis = {api["documenttype"]: api for api in config["standard"]}
+    apis = {api["documenttype"]: api for api in config[config_type]}
     if document_type not in apis:
         raise Exception("No config found for document type " + document_type)
 
@@ -172,7 +172,7 @@ def load_config(document_type) -> dict:
 
 
 def process_standard(document_id: int, document_type: str) -> None:
-    apis = load_config(document_type)
+    apis = load_config(document_type, "standard")
 
     m = get_mayan()
     document, pdf_bytes = load_document(m, document_id)
@@ -241,7 +241,7 @@ def process_standard(document_id: int, document_type: str) -> None:
 
 
 def process_custom(document_id: int, document_type: str) -> None:
-    apis = load_config(document_type)
+    apis = load_config(document_type, "custom")
 
     account_name = apis[document_type]["account"]
     endpoint_name = apis[document_type]["endpoint"]
