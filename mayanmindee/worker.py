@@ -276,7 +276,7 @@ def process_custom(document_id: int, document_type: str) -> None:
         )
 
     for field_name, metadata_mappings in required_fields.items():
-        result = parsed_doc.prediction.fields[field_name].contents_string()
+        result = parsed_doc.document.prediction.fields[field_name].contents_string()
         for metadata_mapping in metadata_mappings:
             if "postprocess" in metadata_mapping[1]:
                 result = post_processing(
