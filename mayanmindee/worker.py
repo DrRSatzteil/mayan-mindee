@@ -300,7 +300,7 @@ def process_custom(document_id: int, document_type: str) -> None:
         )
 
     for field_name, tag_mappings in required_fields.items():
-        result = parsed_doc.document.fields[field_name].contents_string()
+        result = parsed_doc.document.inference.prediction.fields[field_name].contents_string()
         if result:
             for tag_mapping in tag_mappings:
                 if is_similar(
