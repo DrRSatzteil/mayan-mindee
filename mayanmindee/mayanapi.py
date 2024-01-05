@@ -20,7 +20,7 @@ class Endpoint(object):
         if "://" in endpoint:
             base, endpoint = endpoint.split("api/", 1)
             base += "api/"
-            version = re.search("api/(v\d+)/", endpoint)
+            version = re.search(r"api/(v\d+)/", endpoint)
             if version:
                 self.version = version.group(1)
                 base += self.version
@@ -38,7 +38,7 @@ class Endpoint(object):
             params = {}
 
         if not self.version:
-            version = re.search("api/(v\d+)/", base)
+            version = re.search(r"api/(v\d+)/", base)
             if version:
                 self.version = version.group(1)
         self.base = base
