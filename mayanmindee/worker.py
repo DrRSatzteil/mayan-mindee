@@ -259,7 +259,7 @@ def process_custom(document_id: int, document_type: str) -> None:
         storeocr = apis[document_type]["storeocr"]
         if storeocr:
             prediction = json.dumps(
-                parsed_doc.raw_http
+                parsed_doc.document.inference.prediction.raw_prediction
             )
             add_metadata(
                 m,
