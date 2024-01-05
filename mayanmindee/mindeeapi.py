@@ -13,7 +13,7 @@ def ocr_standard(pdf_bytes, document_name, document_type):
 
 
 def ocr_custom(pdf_bytes, document_name, account_name, endpoint_name):
-    client = Client(api_key=os.getenv("MINDEE_API_KEY")).add_endpoint(
+    client = Client(api_key=os.getenv("MINDEE_API_KEY")).create_endpoint(
         account_name=account_name,
         endpoint_name=endpoint_name,
     )
