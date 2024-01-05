@@ -28,3 +28,8 @@ def trigger_invoice(document_id):
 def trigger_payroll(document_id):
     q.enqueue(process_custom, document_id, "Payroll")
     return "OK"
+
+@app.route("/custom/<api_name>/<int:document_id>", methods=["GET", "POST"])
+def trigger_payroll(api_name, document_id):
+    q.enqueue(process_custom, document_id, api_name)
+    return "OK"
