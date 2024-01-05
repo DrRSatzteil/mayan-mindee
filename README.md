@@ -76,9 +76,6 @@ This service only triggers tasks for the worker.
 **The following environment variables are relevant:**
 - `REDIS_URL`: provide a proper redis url for the task queuing
 
-Please note that right now it is not enough to create a new config in the api.json file but you also need to add a new endpoint in the mayanmindee/service.py file.
-This might be changed in a future release so that you can add new apis only by adjusting the config file.
-
 Currently the following endpoints (in brackets the corresponding mindee apis) are provided:
 - `http://mayam-mindee-web:8000/general/<document_id>` (https://platform.mindee.com/mindee/proof_of_address)
 - `http://mayam-mindee-web:8000/invoice/<document_id>` (https://platform.mindee.com/mindee/invoices)
