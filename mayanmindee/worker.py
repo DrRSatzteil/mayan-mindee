@@ -245,6 +245,7 @@ def process_custom(document_id: int, document_type: str, synchronous: False) -> 
 
     account_name = apis[document_type]["account"]
     endpoint_name = apis[document_type]["endpoint"]
+    model_version = apis[document_type]["model"]
 
     m = get_mayan()
     document, pdf_bytes = load_document(m, document_id)
@@ -252,7 +253,7 @@ def process_custom(document_id: int, document_type: str, synchronous: False) -> 
     file = cut_pages(pdf_bytes, pagelimit=apis[document_type]["pagelimit"])
 
     parsed_doc = ocr_custom(
-        file, str(document_id) + ".pdf", account_name, endpoint_name, synchronous
+        file, str(document_id) + ".pdf", account_name, endpoint_name, model_version, synchronous
     )
 
     if "storeocr" in apis[document_type]:
