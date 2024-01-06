@@ -24,12 +24,8 @@ def trigger_invoice(document_id):
     q.enqueue(process_standard, document_id, "TypeInvoiceV4")
     return "OK"
 
-@app.route("/payroll/<int:document_id>", methods=["GET", "POST"])
-def trigger_payroll(document_id):
-    q.enqueue(process_custom, document_id, "Payroll")
-    return "OK"
-
 @app.route("/custom/<api_name>/<int:document_id>", methods=["GET", "POST"])
 def trigger_custom(api_name, document_id):
-    q.enqueue(process_custom, document_id, api_name)
+    synchronous = request.args.get('synchronous', default=False, type=bool)
+    q.enqueue(process_custom, document_id, api_name, synchronous)
     return "OK"
