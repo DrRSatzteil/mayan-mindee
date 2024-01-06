@@ -12,12 +12,15 @@ def ocr_standard(pdf_bytes, document_name, document_type):
     return parsed_doc
 
 
-def ocr_custom(pdf_bytes, document_name, account_name, endpoint_name):
+def ocr_custom(pdf_bytes, document_name, account_name, endpoint_name, synchronous=False):
     client = Client(api_key=os.getenv("MINDEE_API_KEY"))
     custom_endpoint = client.create_endpoint(
         account_name=account_name,
         endpoint_name=endpoint_name,
     )
     doc = client.source_from_bytes(pdf_bytes, document_name)
-    parsed_doc = client.enqueue_and_parse(product.CustomV1, input_source=doc, include_words=True, endpoint=custom_endpoint)
+    if synchronous:
+        parsed_doc = client.parse(product.CustomV1, input_source=doc, endpoint=custom_endpoint)
+    else:
+        parsed_doc = client.enqueue_and_parse(product.CustomV1, input_source=doc, include_words=True, endpoint=custom_endpoint)
     return parsed_doc
