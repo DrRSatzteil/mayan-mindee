@@ -157,6 +157,18 @@ def load_config(document_type, config_type) -> dict:
 
     return apis
 
+def getattritem(obj, attr: str) -> Any:
+    steps = list(filter(None, re.split(r"\[(\d+)\]", attr)))
+    a = iter(steps)
+    pairs = zip(a, a)
+    for pair in pairs:
+        obj = operator.itemgetter(int(pair[1]))(
+            operator.attrgetter(pair[0].lstrip("."))(obj)
+        )
+    if len(steps) % 2 > 0:
+        obj = operator.attrgetter(steps[-1].lstrip("."))(obj)
+    return obj
+
 
 def process_standard(document_id: int, document_type: str) -> None:
     apis = load_config(document_type, "standard")
@@ -186,7 +198,7 @@ def process_standard(document_id: int, document_type: str) -> None:
         )
 
     for field_name, metadata_mappings in required_fields.items():
-        result = parsed_doc.document.inference.prediction.fields[field_name].contents_string()
+        result = getattritem(parsed_doc.document.inference.prediction.fields, field_name).contents_string()
         for metadata_mapping in metadata_mappings:
             if "postprocess" in metadata_mapping[1]:
                 result = post_processing(
@@ -210,7 +222,7 @@ def process_standard(document_id: int, document_type: str) -> None:
         )
 
     for field_name, tag_mappings in required_fields.items():
-        result = parsed_doc.document.inference.prediction.fields[field_name].contents_string()
+        result = getattritem(parsed_doc.document.inference.prediction.fields, field_name).contents_string()
         if result:
             for tag_mapping in tag_mappings:
                 if is_similar(
