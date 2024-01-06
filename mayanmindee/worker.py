@@ -240,7 +240,7 @@ def process_standard(document_id: int, document_type: str) -> None:
     add_tags(m, document, tags)
 
 
-def process_custom(document_id: int, document_type: str) -> None:
+def process_custom(document_id: int, document_type: str, synchronous: False) -> None:
     apis = load_config(document_type, "custom")
 
     account_name = apis[document_type]["account"]
@@ -252,7 +252,7 @@ def process_custom(document_id: int, document_type: str) -> None:
     file = cut_pages(pdf_bytes, pagelimit=apis[document_type]["pagelimit"])
 
     parsed_doc = ocr_custom(
-        file, str(document_id) + ".pdf", account_name, endpoint_name
+        file, str(document_id) + ".pdf", account_name, endpoint_name, synchronous
     )
 
     if "storeocr" in apis[document_type]:
