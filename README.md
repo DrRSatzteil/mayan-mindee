@@ -109,6 +109,7 @@ See full example of config file in mayanmindee/config/api.json.
             "documenttype": <String: Can be anything but must be unique>,
             "account": <String: Mindee account, see documentation over at mindee>,
             "endpoint": <String: Name of the endpoint as defined over at mindee>,
+            "model": <Version of the used model, see model section in your api>,
             "pagelimit": <Integer: Limits the number of pages sent to mindee (see api limits and it may be used to save you cost). All pages exeeding the limit will be removed before the documents gets sent>,
             "storeocr": <String: Optional name of metadata item to store the complete prediction data including boxes etc.>,
             "metadata": {
