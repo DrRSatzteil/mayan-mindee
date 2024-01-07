@@ -198,7 +198,7 @@ def process_standard(document_id: int, document_type: str) -> None:
         )
 
     for field_name, metadata_mappings in required_fields.items():
-        result = getattritem(parsed_doc.document.inference.prediction, field_name).value
+        result = getattritem(parsed_doc.document.inference.prediction, field_name)
         for metadata_mapping in metadata_mappings:
             if "postprocess" in metadata_mapping[1]:
                 result = post_processing(
@@ -222,7 +222,7 @@ def process_standard(document_id: int, document_type: str) -> None:
         )
 
     for field_name, tag_mappings in required_fields.items():
-        result = getattritem(parsed_doc.document.inference.prediction, field_name).value
+        result = getattritem(parsed_doc.document.inference.prediction, field_name)
         if result:
             for tag_mapping in tag_mappings:
                 if is_similar(
