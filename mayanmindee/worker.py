@@ -271,7 +271,7 @@ def process_custom(document_id: int, document_type: str, synchronous: False) -> 
         try:
             result = parsed_doc.document.inference.prediction.fields[field_name].contents_string()
         except:
-            parsed_doc.document.inference.prediction.classifications[field_name].contents_string()
+            parsed_doc.document.inference.prediction.classifications[field_name].value()
         for metadata_mapping in metadata_mappings:
             if "postprocess" in metadata_mapping[1]:
                 result = post_processing(
@@ -298,7 +298,7 @@ def process_custom(document_id: int, document_type: str, synchronous: False) -> 
         try:
             result = parsed_doc.document.inference.prediction.fields[field_name].contents_string()
         except:
-            parsed_doc.document.inference.prediction.classifications[field_name].contents_string()
+            parsed_doc.document.inference.prediction.classifications[field_name].value()
         if result:
             for tag_mapping in tag_mappings:
                 if is_similar(
