@@ -296,7 +296,7 @@ def process_custom(document_id: int, document_type: str, synchronous: False) -> 
 
     for field_name, tag_mappings in required_fields.items():
         try:
-            result = parsed_doc.document.inference.prediction.fields[field_name].contents_string()
+            result = parsed_doc.document.inference.prediction.fields[field_name].value
         except:
             result = parsed_doc.document.inference.prediction.classifications[field_name].value
         if result:
