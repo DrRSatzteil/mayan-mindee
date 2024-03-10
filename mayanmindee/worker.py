@@ -123,7 +123,7 @@ def add_tags(m: Mayan, document: dict, tags) -> None:
 
 
 def is_similar(seq1, seq2, confidence) -> bool:
-    return fuzz.partial_ratio(seq1.lower(), seq2.lower()) >= confidence
+    return fuzz.partial_token_sort_ratio(seq1.lower(), seq2.lower()) >= confidence
 
 
 def post_processing(result: Any, parsed_doc, processing_steps: list) -> str:
