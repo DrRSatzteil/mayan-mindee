@@ -23,5 +23,5 @@ def ocr_custom(pdf_bytes, document_name, account_name, endpoint_name, model_vers
     if synchronous:
         parsed_doc = client.parse(product.CustomV1, input_source=doc, include_words=True, endpoint=custom_endpoint)
     else:
-        parsed_doc = client.enqueue_and_parse(product.CustomV1, input_source=doc, include_words=True, endpoint=custom_endpoint)
+        parsed_doc = client.enqueue_and_parse(product.GeneratedV1, input_source=doc, include_words=True, endpoint=custom_endpoint)
     return parsed_doc
