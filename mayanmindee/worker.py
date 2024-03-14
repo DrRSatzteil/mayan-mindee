@@ -169,7 +169,6 @@ def getattritem(obj, attr: str) -> Any:
         obj = operator.attrgetter(steps[-1].lstrip("."))(obj)
     return obj
 
-
 def process_standard(document_id: int, document_type: str) -> None:
     apis = load_config(document_type, "standard")
 
@@ -302,9 +301,15 @@ def process_custom(document_id: int, document_type: str, synchronous: False) -> 
 
     for field_name, tag_mappings in required_fields.items():
         try:
-            result = parsed_doc.document.inference.prediction.fields[field_name].value
+            field = parsed_doc.document.inference.prediction.fields[field_name]
         except:
-            result = parsed_doc.document.inference.prediction.classifications[field_name].value
+            field = parsed_doc.document.inference.prediction.classifications[field_name]
+
+        if hasattr(field, "value"):
+            result = field.value
+        else:
+            result = field.contents_string()
+
         if result:
             for tag_mapping in tag_mappings:
                 if is_similar(
