@@ -269,9 +269,15 @@ def process_custom(document_id: int, document_type: str, synchronous: False) -> 
 
     for field_name, metadata_mappings in required_fields.items():
         try:
-            result = parsed_doc.document.inference.prediction.fields[field_name].value
+            field = parsed_doc.document.inference.prediction.fields[field_name]
         except:
-            result = parsed_doc.document.inference.prediction.classifications[field_name].value
+            field = parsed_doc.document.inference.prediction.classifications[field_name]
+        
+        if hasattr(field, "value"):
+            result = field.value
+        else:
+            result = field.contents_string
+        
         for metadata_mapping in metadata_mappings:
             if "postprocess" in metadata_mapping[1]:
                 result = post_processing(
