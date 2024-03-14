@@ -276,7 +276,7 @@ def process_custom(document_id: int, document_type: str, synchronous: False) -> 
         if hasattr(field, "value"):
             result = field.value
         else:
-            result = field.contents_string
+            result = field.contents_string()
         
         for metadata_mapping in metadata_mappings:
             if "postprocess" in metadata_mapping[1]:
