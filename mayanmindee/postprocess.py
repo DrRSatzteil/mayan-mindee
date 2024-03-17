@@ -8,7 +8,10 @@ def replace(result, parsed_doc, *args):
 
 def format(result, parsed_doc, *args):
     if result:
-        return args[0].format(result)
+        try:
+            return args[0].format(result)
+        except:
+            return result
 
 
 def append(result, parsed_doc, *args):
