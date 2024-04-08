@@ -9,6 +9,8 @@ def replace(result, parsed_doc, *args):
 def format(result, parsed_doc, *args):
     if result:
         try:
+            if isinstance(result, str):
+                result = float(result)
             return args[0].format(result)
         except:
             return result
