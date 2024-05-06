@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Build the web Docker image
       run: docker build . --file docker/web/Dockerfile --tag ${{secrets.DOCKER_USER}}/mayan-mindee-web:latest
