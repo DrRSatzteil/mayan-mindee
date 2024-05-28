@@ -68,7 +68,7 @@ def load_document(m: Mayan, document_id) -> (dict, bytes):
         )
 
     # Load document pdf
-    pdf_bytes = m.downloadfile(document["file_latest"]["download_url"])
+    pdf_bytes = m.downloadfile(document["file_latest"]["url"] + "/download/")
 
     return document, pdf_bytes
 
