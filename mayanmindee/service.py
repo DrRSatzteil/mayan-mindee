@@ -16,16 +16,19 @@ app = Flask("MAYANMINDEE")
 
 @app.route("/general/<int:document_id>", methods=["GET", "POST"])
 def trigger_general(document_id):
-    q.enqueue(process_standard, document_id, "ProofOfAddressV1")
+    overwrite = request.args.get('overwrite', default=False, type=bool)
+    q.enqueue(process_standard, document_id, "ProofOfAddressV1", overwrite)
     return "OK"
 
 @app.route("/invoice/<int:document_id>", methods=["GET", "POST"])
 def trigger_invoice(document_id):
-    q.enqueue(process_standard, document_id, "InvoiceV4")
+    overwrite = request.args.get('overwrite', default=False, type=bool)
+    q.enqueue(process_standard, document_id, "InvoiceV4", overwrite)
     return "OK"
 
 @app.route("/custom/<api_name>/<int:document_id>", methods=["GET", "POST"])
 def trigger_custom(api_name, document_id):
     synchronous = request.args.get('synchronous', default=False, type=bool)
-    q.enqueue(process_custom, document_id, api_name, synchronous)
+    overwrite = request.args.get('overwrite', default=False, type=bool)
+    q.enqueue(process_custom, document_id, api_name, synchronous, overwrite)
     return "OK"

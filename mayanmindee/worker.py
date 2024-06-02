@@ -169,7 +169,7 @@ def getattritem(obj, attr: str) -> Any:
         obj = operator.attrgetter(steps[-1].lstrip("."))(obj)
     return obj
 
-def process_standard(document_id: int, document_type: str) -> None:
+def process_standard(document_id: int, document_type: str, overwrite: bool) -> None:
     apis = load_config(document_type, "standard")
 
     m = get_mayan()
@@ -204,12 +204,14 @@ def process_standard(document_id: int, document_type: str) -> None:
                     result, parsed_doc, metadata_mapping[1]["postprocess"]
                 )
             if result:
+                if (metadata_mapping[1]["overwrite"]):
+                    overwrite = metadata_mapping[1]["overwrite"];
                 add_metadata(
                     m,
                     document,
                     metadata_mapping[0],
                     result,
-                    metadata_mapping[1]["overwrite"],
+                    overwrite
                 )
         result = None
 
@@ -232,7 +234,7 @@ def process_standard(document_id: int, document_type: str) -> None:
     add_tags(m, document, tags)
 
 
-def process_custom(document_id: int, document_type: str, synchronous: False) -> None:
+def process_custom(document_id: int, document_type: str, synchronous: False, overwrite: bool) -> None:
     apis = load_config(document_type, "custom")
 
     account_name = apis[document_type]["account"]
@@ -283,12 +285,14 @@ def process_custom(document_id: int, document_type: str, synchronous: False) -> 
                     result, parsed_doc, metadata_mapping[1]["postprocess"]
                 )
             if result:
+                if metadata_mapping[1]["overwrite"]:
+                    overwrite = metadata_mapping[1]["overwrite"]
                 add_metadata(
                     m,
                     document,
                     metadata_mapping[0],
                     result,
-                    metadata_mapping[1]["overwrite"],
+                    overwrite
                 )
         result = None
 
