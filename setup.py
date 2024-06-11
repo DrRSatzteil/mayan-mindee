@@ -26,5 +26,6 @@ setup(
         "thefuzz",
         "python-Levenshtein",
         "PyPDF2",
+        "pycryptodome",
     ],
 )
