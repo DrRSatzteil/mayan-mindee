@@ -90,8 +90,14 @@ This service receives tasks queued by the web service.
 - `REDIS_URL`: provide a proper redis url for the task queuing
 - `MAYAN_USER`: User to access Mayan EDMS
 - `MAYAN_PASSWORD`: Password for MAYAN_USER
-- `MAYAN_URL`: URL of the Mayan EDMS instance. Should be `http://app:8000/api/v4/` (Note that the trailing `/` is required) if on the same docker network with default service names and Mayan EDMS version v4.X.
+- `MAYAN_URL`: URL of the Mayan EDMS instance. Should be `http://app:8000/api/v4/` (Note that the trailing `/` is required) if on the same docker network with default service names and Mayan EDMS version v4.X. Should point to a https url when you are using OIDC login
 - `MINDEE_API_KEY`: Api key from your mindee account
+- `OIDC_URL`: Token URL of you OAUTH2 provider when you use OIDC login (OIDC login is only tested against authentik). When this property is set it is assumed that you want to use an OIDC login. The other OIDC variables have to be set then. MAYAN_USER and MAYAN_PASSWORD are not necessary in that case and will be ignored if set
+- `OIDC_USER`: Username of the service account user used for login
+- `OIDC_PASSWORD/OIDC_PASSWORD_FILE`: App token for service account user (supports docker SECRETS)
+- `OIDC_CLIENT_ID`: Client ID of your mayan OAUTH2 provider
+- `OIDC_CLIENT_SECRET/OIDC_CLIENT_SECRET_FILE`: Client secret of your mayan OAUTH2 provider (supports docker SECRETS)
+- `OIDC_SCOPE`: Requested scope e.g. 'openid profile email'
 
 ## Configuration
 

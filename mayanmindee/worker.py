@@ -28,13 +28,36 @@ def get_mayan_options() -> dict:
     options["username"] = os.getenv("MAYAN_USER")
     options["password"] = os.getenv("MAYAN_PASSWORD")
     options["url"] = os.getenv("MAYAN_URL")
+    options["oidc_url"] = os.getenv("OIDC_URL")
+    if options["oidc_url"]:
+        options["oidc_user"] = os.getenv("OIDC_USER")
+        options["oidc_password"] = os.getenv("OIDC_PASSWORD")
+        if not options["oidc_password"]:
+            with open(os.getenv("OIDC_PASSWORD_FILE"), "r") as file:
+                options["oidc_password"] = file.read().rstrip()
+        options["oidc_client_id"] = os.getenv("OIDC_CLIENT_ID")
+        options["oidc_client_secret"] = os.getenv("OIDC_CLIENT_SECRET")
+        if not options["oidc_client_secret"]:
+            with open(os.getenv("OIDC_CLIENT_SECRET_FILE"), "r") as file:
+                options["oidc_client_secret"] = file.read().rstrip()
+        options["oidc_scope"] = os.getenv("OIDC_SCOPE")
     return options
 
 
 def get_mayan() -> Mayan:
     options = get_mayan_options()
     m = Mayan(options["url"])
-    m.login(options["username"], options["password"])
+    if options["oidc_url"]:
+        m.oidcLogin(
+            options["oidc_url"],
+            options["oidc_user"],
+            options["oidc_password"],
+            options["oidc_client_id"],
+            options["oidc_client_secret"],
+            options["oidc_scope"],
+        )
+    else:
+        m.login(options["username"], options["password"])
     _logger.info("Load meta informations from mayan")
     m.load()
     return m
