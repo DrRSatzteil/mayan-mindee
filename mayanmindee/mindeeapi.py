@@ -6,7 +6,11 @@ from mindee import Client, product
 __all__ = []
 
 def ocr_standard(pdf_bytes, document_name, document_type):
-    client = Client(api_key=os.getenv("MINDEE_API_KEY"))
+    api_key = os.getenv("MINDEE_API_KEY");
+    if not apikey:
+        with open(os.getenv("MINDEE_API_KEY_FILE"), "r") as file:
+            apikey = file.read().rstrip()
+    client = Client(api_key=api_key)
     doc = client.source_from_bytes(pdf_bytes, document_name)
     parsed_doc = client.parse(getattr(product, document_type), doc)
     return parsed_doc
