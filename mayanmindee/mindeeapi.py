@@ -9,18 +9,17 @@ def ocr_standard(pdf_bytes, document_name, document_type):
     api_key = os.getenv("MINDEE_API_KEY");
     if not api_key:
         with open(os.getenv("MINDEE_API_KEY_FILE"), "r") as file:
-            apikey = file.read().rstrip()
+            api_key = file.read().rstrip()
     client = Client(api_key=api_key)
     doc = client.source_from_bytes(pdf_bytes, document_name)
     parsed_doc = client.parse(getattr(product, document_type), doc)
     return parsed_doc
 
-
 def ocr_custom(pdf_bytes, document_name, account_name, endpoint_name, model_version, synchronous=False):
     api_key = os.getenv("MINDEE_API_KEY");
     if not api_key:
         with open(os.getenv("MINDEE_API_KEY_FILE"), "r") as file:
-            apikey = file.read().rstrip()
+            api_key = file.read().rstrip()
     client = Client(api_key=api_key)
     custom_endpoint = client.create_endpoint(
         account_name=account_name,
