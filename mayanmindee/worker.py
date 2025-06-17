@@ -71,7 +71,7 @@ def load_document_metadata(m: Mayan, document: dict) -> dict:
     return document_metadata
 
 
-def load_document(m: Mayan, document_id) -> (dict, bytes):
+def load_document(m: Mayan, document_id) -> tuple[dict, bytes]:
     _logger.info("Loading document %s", document_id)
 
     # Check if document exists
