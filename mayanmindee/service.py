@@ -20,6 +20,12 @@ def trigger_general(document_id):
     q.enqueue(process_standard, document_id, "ProofOfAddressV1", overwrite)
     return "OK"
 
+@app.route("/standard/<api_name>/<int:document_id>", methods=["GET", "POST"])
+def trigger_standard(api_name, document_id):
+    overwrite = request.args.get('overwrite', default=False, type=bool)
+    q.enqueue(process_standard, document_id, api_name, overwrite)
+    return "OK"
+
 @app.route("/invoice/<int:document_id>", methods=["GET", "POST"])
 def trigger_invoice(document_id):
     overwrite = request.args.get('overwrite', default=False, type=bool)
